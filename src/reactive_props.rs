@@ -26,6 +26,14 @@ impl From<RcSignal<bool>> for ReactiveBool<'static> {
         ReactiveBool(Rc::new(move || *value.get()))
     }
 }
+impl<'cx, F> From<F> for ReactiveBool<'cx>
+where
+    F: Fn() -> bool + 'cx,
+{
+    fn from(value: F) -> Self {
+        ReactiveBool(Rc::new(move || value()))
+    }
+}
 impl From<bool> for ReactiveBool<'static> {
     fn from(value: bool) -> Self {
         ReactiveBool(Rc::new(move || value))
